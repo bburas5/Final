@@ -1,0 +1,78 @@
+<html>
+<head>
+<title>My Map</title>
+<link rel="stylesheet" href="https://js.arcgis.com/3.16/esri/css/esri.css">
+	<style>
+      #map {
+	width:900px;
+	height:900px;
+	margin:0;
+	padding:0;
+}
+    </style>
+
+	<script src="https://js.arcgis.com/3.16/"></script>
+
+<script>
+var map;
+
+	require([
+	"esri/map",
+	"esri/dijit/BasemapToggle",
+	"esri/layers/ArcGISDynamicMapServiceLayer",
+	"esri/layers/ImageParameters",
+	"esri/layers/WMSLayer",
+	"dojo/domReady!",
+			],
+	  function (
+		Map, BasemapToggle, ArcGISDynamicMapServiceLayer, ImageParameters,WMSLayer) {
+	//ESRI Basemap
+	   map = new Map("map", {
+          basemap: "streets",  //more basemaps http://arcg.is/1JVo6Wd
+          center: [-91.15, 30.45], // longitude, latitude
+          zoom: 15
+        });
+	//ESRI Basemap Gallery
+	
+	//Basemap Toggle ?
+		var toggle = new BasemapToggle({
+        map: map,
+        basemap: "satellite"
+      }, "BasemapToggle");
+      toggle.startup(toggle);
+	  
+	//EBR Rest Service Layer 1
+		var EBRServiceLayer = new ArcGISDynamicMapServiceLayer("https://maps.brgov.com/gis/rest/services/Cadastral/Zoning/MapServer", 
+			{
+			"opacity" : 0.5,
+			});
+        map.addLayer(EBRServiceLayer);
+	//EBR Rest Service Layer 2 Future Land Use
+		var EBRServiceLayerFLU = new ArcGISDynamicMapServiceLayer("http://maps.brgov.com/gis/rest/services/Cadastral/Future_Land_Use/MapServer", 
+			{
+			"opacity" : 0.5,
+			});
+        map.addLayer(EBRServiceLayerFLU);
+		
+	//EBR Rest Service WMS Layer
+		var WMSLayer = new WMSLayer("https://maps.brgov.com/gis/services/Cadastral/Future_Land_Use/MapServer/WMSServer", {
+            format: "PNG24",
+            visibleLayers: [0]
+          });
+          
+          map.addLayer(WMSLayer);
+      });
+
+</script>
+
+
+
+
+	</head>
+
+	<body>
+		<div id="map"></div>
+
+		
+	</body>
+</html>
